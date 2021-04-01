@@ -1,3 +1,7 @@
+# 0.6.0
+
+- update to `voyager` 3.0.0 API
+
 # 0.5.0
 
 - update to `voyager` 2.0.0 API
