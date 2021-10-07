@@ -8,7 +8,7 @@ class BlocsPluginBuilder {
   var _blocBuilders = <_RepositoryBlocBuilder>[];
   BlocsPluginBuilder
       addBloc<BlocType extends BlocParentType, BlocParentType extends Bloc>(
-          VoyagerBlocBuilder<BlocType> builder) {
+          VoyagerBlocBuilder<BlocType>? builder) {
     final blocType = _typeOf<BlocType>();
     final blocParentType = _typeOf<BlocParentType>();
 
@@ -27,7 +27,7 @@ class BlocsPluginBuilder {
   }
 
   BlocsPluginBuilder addBaseBloc<BlocType extends Bloc>(
-          VoyagerBlocBuilder<BlocType> builder) =>
+          VoyagerBlocBuilder<BlocType>? builder) =>
       addBloc<BlocType, BlocType>(builder);
 
   BlocsPluginBuilder addBuilder(BlocsPluginBuilder other) {
@@ -40,7 +40,7 @@ class BlocsPluginBuilder {
 
 /// Specify config
 ///
-class BlocsPlugin extends RouterPlugin {
+class BlocsPlugin extends VoyagerPlugin{
   final Map<String, _RepositoryBlocBuilder> _builders =
       Map<String, _RepositoryBlocBuilder>();
 
@@ -51,13 +51,13 @@ class BlocsPlugin extends RouterPlugin {
   }
 
   @override
-  void outputFor(RouterContext context, config, Voyager output) {
+  void outputFor(VoyagerContext? context, config, Voyager output) {
     if (!(config is List<dynamic>)) return;
 
     final blocRepository = BlocRepository();
-    final blocsToDispose = List<_Lazy<Bloc>>();
+    final blocsToDispose = <_Lazy<Bloc>>[];
 
-    (config as List<dynamic>).forEach((blocNode) {
+    config.forEach((blocNode) {
       dynamic blocConfig;
       String key;
       String name = _KEY_DEFAULT;
@@ -87,7 +87,7 @@ class BlocsPlugin extends RouterPlugin {
       }
 
       _Lazy<Bloc> bloc = _Lazy<Bloc>(
-          () => builder.builder(context, blocConfig, blocRepository));
+          () => builder.builder!(context, blocConfig, blocRepository));
       blocRepository.add(bloc, name, builder.type, builder.parentType);
       blocsToDispose.add(bloc);
     });
@@ -96,7 +96,7 @@ class BlocsPlugin extends RouterPlugin {
     output.onDispose(() {
       blocsToDispose.forEach((bloc) {
         if (bloc.isInitalized) {
-          bloc.value.close();
+          bloc.value!.close();
         }
       });
     });
@@ -104,12 +104,12 @@ class BlocsPlugin extends RouterPlugin {
 }
 
 typedef VoyagerBlocBuilder<T extends Bloc> = T Function(
-    RouterContext context, dynamic config, BlocRepository blocRepository);
+    VoyagerContext? context, dynamic config, BlocRepository blocRepository);
 
 class _RepositoryBlocBuilder {
   final Type type;
   final Type parentType;
-  final VoyagerBlocBuilder builder;
+  final VoyagerBlocBuilder? builder;
 
   _RepositoryBlocBuilder(this.builder, this.type, this.parentType);
 }
@@ -133,9 +133,9 @@ class BlocRepository {
     _blocByType[typeStr] = (_blocByType[typeStr] ?? [])..add(bloc);
   }
 
-  T find<T extends Bloc>({String name}) {
+  T? find<T extends Bloc>({String? name}) {
     if (name != null && name != _KEY_DEFAULT) {
-      T foundBloc;
+      T? foundBloc;
       _blocByName[name]?.forEach((lazyBloc) {
         // ignore: close_sinks
         final bloc = lazyBloc.value;
@@ -157,7 +157,7 @@ class BlocRepository {
 /// https://github.com/dart-lang/sdk/issues/11923
 Type _typeOf<T>() => T;
 
-dynamic _firstOrNull(List list) {
+dynamic _firstOrNull(List? list) {
   if (list == null || list.isEmpty) return null;
   return list[0];
 }
@@ -166,12 +166,12 @@ typedef LazyBuilder<T> = T Function();
 
 class _Lazy<T> {
   _Lazy(this.builder);
-  T _value;
+  T? _value;
   final LazyBuilder<T> builder;
 
   bool get isInitalized => _value != null;
 
-  T get value {
+  T? get value {
     if (_value == null) {
       _value = builder();
     }
