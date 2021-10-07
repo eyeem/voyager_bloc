@@ -12,11 +12,11 @@ import './gen/voyager_gen.dart';
 
 class SimpleBlocDelegate extends BlocObserver {
 
-  @override
-  void onEvent(Bloc bloc, Object event) {
-    super.onEvent(bloc, event);
-    print(event);
-  }
+  // @override
+  // void onEvent(Bloc bloc, Object event) {
+  //   super.onEvent(bloc, event);
+  //   print(event);
+  // }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
@@ -74,65 +74,65 @@ class CounterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final voyager = context.voyager;
-    // TODO if needed: check why voyager.blocs is not available
+
     // ignore: close_sinks
-    // final counterBloc = voyager.blocs.find<CounterBloc>();
-    // // ignore: close_sinks
-    // final themeBloc = voyager.blocs.find<ThemeBloc>();
-    return Scaffold();
-  //   return BlocBuilder<ThemeBloc, ThemeData>(
-  //     bloc: themeBloc,
-  //     builder: (context, data) => Theme(
-  //       data: data,
-  //       child: Scaffold(
-  //         appBar: AppBar(title: Text(voyager.title)),
-  //         body: BlocBuilder<CounterBloc, int>(
-  //           bloc: counterBloc,
-  //           builder: (context, count) {
-  //             return Center(
-  //               child: Text(
-  //                 '$count',
-  //                 style: TextStyle(fontSize: 24.0),
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //         floatingActionButton: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.end,
-  //           mainAxisAlignment: MainAxisAlignment.end,
-  //           children: <Widget>[
-  //             Padding(
-  //               padding: EdgeInsets.symmetric(vertical: 5.0),
-  //               child: FloatingActionButton(
-  //                 child: Icon(Icons.add),
-  //                 onPressed: () {
-  //                   counterBloc.add(CounterEvent.increment);
-  //                 },
-  //               ),
-  //             ),
-  //             Padding(
-  //               padding: EdgeInsets.symmetric(vertical: 5.0),
-  //               child: FloatingActionButton(
-  //                 child: Icon(Icons.remove),
-  //                 onPressed: () {
-  //                   counterBloc.add(CounterEvent.decrement);
-  //                 },
-  //               ),
-  //             ),
-  //             Padding(
-  //               padding: EdgeInsets.symmetric(vertical: 5.0),
-  //               child: FloatingActionButton(
-  //                 child: Icon(Icons.update),
-  //                 onPressed: () {
-  //                   themeBloc.add(ThemeEvent.toggle);
-  //                 },
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
+    final counterBloc = voyager.blocs.find<CounterBloc>();
+    // ignore: close_sinks
+    final themeBloc = voyager.blocs.find<ThemeBloc>();
+
+    return BlocBuilder<ThemeBloc, ThemeData>(
+      bloc: themeBloc,
+      builder: (context, data) => Theme(
+        data: data,
+        child: Scaffold(
+          appBar: AppBar(title: Text(voyager.title)),
+          body: BlocBuilder<CounterBloc, int>(
+            bloc: counterBloc,
+            builder: (context, count) {
+              return Center(
+                child: Text(
+                  '$count',
+                  style: TextStyle(fontSize: 24.0),
+                ),
+              );
+            },
+          ),
+          floatingActionButton: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
+                child: FloatingActionButton(
+                  child: Icon(Icons.add),
+                  onPressed: () {
+                    counterBloc?.add(CounterEvent.increment);
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
+                child: FloatingActionButton(
+                  child: Icon(Icons.remove),
+                  onPressed: () {
+                    counterBloc?.add(CounterEvent.decrement);
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
+                child: FloatingActionButton(
+                  child: Icon(Icons.update),
+                  onPressed: () {
+                    themeBloc?.add(ThemeEvent.toggle);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -165,7 +165,7 @@ class CounterBloc extends Bloc<CounterEvent, int> {
 enum ThemeEvent { toggle }
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeData> {
-  ThemeBloc(this.intialState) : super(null);
+  ThemeBloc(this.intialState) : super(ThemeData());
 
   factory ThemeBloc.fromConfig(dynamic config) {
     ThemeData data;
