@@ -38,7 +38,7 @@ class ChildBloc extends ParentBloc {
 class CounterBloc extends Bloc {
   final int? initialValue;
 
-  CounterBloc({this.initialValue}) : super(null);
+  CounterBloc({this.initialValue}) : super(initialValue);
 
   @override
   Stream mapEventToState(event) {
@@ -47,6 +47,12 @@ class CounterBloc extends Bloc {
 }
 
 void main() {
+  late VoyagerContext mockVoyagerContext;
+
+  setUp(() {
+    mockVoyagerContext = VoyagerContext(path: '', params: {}, router: VoyagerRouter());
+  });
+
   test('bloc builder basic API', () {
     final builder = BlocsPluginBuilder()
         .addBaseBloc<ParentBloc>((context, config, repository) => ParentBloc())
@@ -59,9 +65,9 @@ void main() {
 
     final blocPlugin = builder.build();
 
-    final output = Voyager(config: {},path: "",pathParams: {});
+    final output = Voyager(config: {}, path: "", pathParams: {});
     blocPlugin.outputFor(
-        null,
+        mockVoyagerContext,
         [
           "ParentBloc@mom",
           "ParentBloc@dad",
@@ -115,10 +121,10 @@ void main() {
 
     final blocPlugin = builder.build();
 
-    final output = Voyager(config: {},path: "",pathParams: {});
+    final output = Voyager(config: {}, path: "", pathParams: {});
     expect(
         () => blocPlugin.outputFor(
-            null,
+            mockVoyagerContext,
             [
               "ParentBloc@@mom",
             ],
@@ -134,10 +140,10 @@ void main() {
 
     final blocPlugin = builder.build();
 
-    final output = Voyager(config: {},path: "",pathParams: {});
+    final output = Voyager(config: {}, path: "", pathParams: {});
     expect(
         () => blocPlugin.outputFor(
-            null,
+            mockVoyagerContext,
             [
               "ParentBloc",
             ],
@@ -163,9 +169,9 @@ void main() {
 
     final blocPlugin = builder.build();
 
-    final output = Voyager(config: {},path: "",pathParams: {});
+    final output = Voyager(config: {}, path: "", pathParams: {});
     blocPlugin.outputFor(
-        null,
+        mockVoyagerContext,
         [
           "ParentBloc@mom",
           "ParentBloc@dad",

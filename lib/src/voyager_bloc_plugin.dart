@@ -51,7 +51,7 @@ class BlocsPlugin extends VoyagerPlugin{
   }
 
   @override
-  void outputFor(VoyagerContext? context, config, Voyager output) {
+  void outputFor(VoyagerContext context, config, Voyager output) {
     if (!(config is List<dynamic>)) return;
 
     final blocRepository = BlocRepository();
@@ -104,7 +104,7 @@ class BlocsPlugin extends VoyagerPlugin{
 }
 
 typedef VoyagerBlocBuilder<T extends Bloc> = T Function(
-    VoyagerContext? context, dynamic config, BlocRepository blocRepository);
+    VoyagerContext context, dynamic config, BlocRepository blocRepository);
 
 class _RepositoryBlocBuilder {
   final Type type;
