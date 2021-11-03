@@ -5,55 +5,59 @@ import 'package:voyager/voyager.dart';
 import 'package:voyager_bloc/voyager_bloc.dart';
 
 class ParentBloc extends Bloc {
-  @override
-  get initialState => null;
+
+  ParentBloc() : super(null);
 
   @override
   Stream mapEventToState(event) {
-    return null;
+    return event;
   }
 }
 
 class StrangerBloc extends Bloc {
-  @override
-  get initialState => null;
+
+  StrangerBloc() : super(null);
 
   @override
   Stream mapEventToState(event) {
-    return null;
+    return event;
   }
 }
 
 class ChildBloc extends ParentBloc {
-  @override
-  get initialState => null;
+
+  ChildBloc() : super();
+
 
   @override
   Stream mapEventToState(event) {
-    return null;
+    return event;
   }
 }
 
 class CounterBloc extends Bloc {
-  final int _initialValue;
+  final int? initialValue;
 
-  CounterBloc(this._initialValue);
-
-  @override
-  get initialState => _initialValue;
+  CounterBloc({this.initialValue}) : super(initialValue);
 
   @override
   Stream mapEventToState(event) {
-    return null;
+    return event;
   }
 }
 
 void main() {
+  late VoyagerContext mockVoyagerContext;
+
+  setUp(() {
+    mockVoyagerContext = VoyagerContext(path: '', params: {}, router: VoyagerRouter());
+  });
+
   test('bloc builder basic API', () {
     final builder = BlocsPluginBuilder()
         .addBaseBloc<ParentBloc>((context, config, repository) => ParentBloc())
         .addBaseBloc<CounterBloc>((context, config, repository) =>
-            CounterBloc(int.parse(config.toString())))
+            CounterBloc(initialValue: int.parse(config.toString())))
         .addBloc<ChildBloc, ParentBloc>(
             (context, config, repository) => ChildBloc())
         .addBaseBloc<StrangerBloc>(
@@ -61,9 +65,9 @@ void main() {
 
     final blocPlugin = builder.build();
 
-    final output = Voyager(config: {});
+    final output = Voyager(config: {}, path: "", pathParams: {});
     blocPlugin.outputFor(
-        null,
+        mockVoyagerContext,
         [
           "ParentBloc@mom",
           "ParentBloc@dad",
@@ -99,7 +103,7 @@ void main() {
         () => BlocsPluginBuilder().addBaseBloc(null),
         throwsA(allOf(
             isArgumentError,
-            predicate((e) =>
+            predicate((dynamic e) =>
                 e.message ==
                 'BlocType must be a subclass of BlocParentType'))));
 
@@ -107,7 +111,7 @@ void main() {
         () => BlocsPluginBuilder().addBloc<ChildBloc, Bloc>(null),
         throwsA(allOf(
             isArgumentError,
-            predicate((e) =>
+            predicate((dynamic e) =>
                 e.message == 'BlocParentType must be a subclass of Bloc'))));
   });
 
@@ -117,17 +121,17 @@ void main() {
 
     final blocPlugin = builder.build();
 
-    final output = Voyager(config: {});
+    final output = Voyager(config: {}, path: "", pathParams: {});
     expect(
         () => blocPlugin.outputFor(
-            null,
+            mockVoyagerContext,
             [
               "ParentBloc@@mom",
             ],
             output),
         throwsA(allOf(
             isArgumentError,
-            predicate((e) =>
+            predicate((dynamic e) =>
                 e.message == 'Too many @ sings in the key of the Bloc'))));
   });
 
@@ -136,23 +140,23 @@ void main() {
 
     final blocPlugin = builder.build();
 
-    final output = Voyager(config: {});
+    final output = Voyager(config: {}, path: "", pathParams: {});
     expect(
         () => blocPlugin.outputFor(
-            null,
+            mockVoyagerContext,
             [
               "ParentBloc",
             ],
             output),
         throwsA(allOf(isUnimplementedError,
-            predicate((e) => e.message == 'No bloc builder for ParentBloc'))));
+            predicate((dynamic e) => e.message == 'No bloc builder for ParentBloc'))));
   });
 
   test('bloc additive builders', () {
     final builderA = BlocsPluginBuilder()
         .addBaseBloc<ParentBloc>((context, config, repository) => ParentBloc())
         .addBaseBloc<CounterBloc>((context, config, repository) =>
-            CounterBloc(int.parse(config.toString())));
+            CounterBloc(initialValue: int.parse(config.toString())));
 
     final builderB = BlocsPluginBuilder()
         .addBloc<ChildBloc, ParentBloc>(
@@ -165,9 +169,9 @@ void main() {
 
     final blocPlugin = builder.build();
 
-    final output = Voyager(config: {});
+    final output = Voyager(config: {}, path: "", pathParams: {});
     blocPlugin.outputFor(
-        null,
+        mockVoyagerContext,
         [
           "ParentBloc@mom",
           "ParentBloc@dad",
