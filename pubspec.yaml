@@ -14,7 +14,7 @@ dependencies:
   voyager:
     git:
       url: https://github.com/eyeem/voyager.git
-      ref: v3.0.1
+      ref: v3.0.2
   flutter_bloc: ^7.1.0
 
 dev_dependencies:

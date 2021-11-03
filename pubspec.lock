@@ -188,11 +188,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v3.0.1"
-      resolved-ref: d6e76f36579c2cc2bc3034c21a4272348aa71496
+      ref: "v3.0.2"
+      resolved-ref: e4cc2f9aec7d896c685ffb3348aa9fadf5388462
       url: "https://github.com/eyeem/voyager.git"
     source: git
-    version: "3.0.1"
+    version: "3.0.2"
   yaml:
     dependency: transitive
     description:

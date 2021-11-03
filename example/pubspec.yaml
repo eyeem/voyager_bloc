@@ -21,10 +21,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  voyager:
-    git:
-      url: https://github.com/eyeem/voyager.git
-      ref: v3.0.1
   voyager_bloc:
     path: ../
   provider: ^5.0.0
